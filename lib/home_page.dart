@@ -349,7 +349,7 @@ class _HomePageState extends State<HomePage> {
                           Text(
                             banner.subtitle,
                             style: const TextStyle(
-                              fontSize: 13,
+                              fontSize: 14,
                               color: Colors.white70,
                             ),
                           ),
