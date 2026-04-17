@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'login_screen.dart';
+import 'home_page.dart'; // pastikan ini benar
 
 void main() {
   runApp(const MyApp());
@@ -10,10 +10,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Foodiego',
+    return const MaterialApp(
+      home: HomePage(), // 🔥 HARUS INI
       debugShowCheckedModeBanner: false,
-      home: const LoginScreen(),
     );
   }
 }
