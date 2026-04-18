@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dummy_data.dart';
 import 'theme.dart';
+import 'search_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -134,38 +135,42 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
             const SizedBox(height: 18),
-            // Search bar
-            TextField(
-              controller: _searchController,
-              onChanged: (_) => setState(() {}),
-              style: const TextStyle(fontSize: 14, color: FoodieColors.textPrimary),
-              decoration: InputDecoration(
-                hintText: 'Cari makanan atau restoran...',
-                hintStyle: const TextStyle(
-                    color: FoodieColors.textHint, fontSize: 14),
-                filled: true,
-                fillColor: Colors.white,
-                prefixIcon: const Icon(Icons.search,
-                    color: FoodieColors.textHint, size: 20),
-                suffixIcon: _searchController.text.isNotEmpty
-                    ? GestureDetector(
-                        onTap: () => setState(() => _searchController.clear()),
-                        child: const Icon(Icons.close,
-                            color: FoodieColors.textHint, size: 18),
-                      )
-                    : null,
-                contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
-                  borderSide: BorderSide.none,
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
-                  borderSide: BorderSide.none,
+            // Search bar — tap langsung ke SearchPage
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => SearchPage()),
+                );
+              },
+              child: AbsorbPointer(
+                child: TextField(
+                  controller: _searchController,
+                  style: const TextStyle(
+                      fontSize: 14, color: FoodieColors.textPrimary),
+                  decoration: InputDecoration(
+                    hintText: 'Cari makanan atau restoran...',
+                    hintStyle: const TextStyle(
+                        color: FoodieColors.textHint, fontSize: 14),
+                    filled: true,
+                    fillColor: Colors.white,
+                    prefixIcon: const Icon(Icons.search,
+                        color: FoodieColors.textHint, size: 20),
+                    contentPadding:
+                        const EdgeInsets.symmetric(vertical: 12),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: BorderSide.none,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -196,7 +201,8 @@ class _HomePageState extends State<HomePage> {
               final cat = DummyData.categories[index];
               final isSelected = _selectedCategoryIndex == index;
               return GestureDetector(
-                onTap: () => setState(() => _selectedCategoryIndex = index),
+                onTap: () =>
+                    setState(() => _selectedCategoryIndex = index),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   margin: const EdgeInsets.only(right: 10),
@@ -281,7 +287,8 @@ class _HomePageState extends State<HomePage> {
           child: PageView.builder(
             controller: _bannerController,
             itemCount: DummyData.banners.length,
-            onPageChanged: (i) => setState(() => _currentBannerIndex = i),
+            onPageChanged: (i) =>
+                setState(() => _currentBannerIndex = i),
             itemBuilder: (context, index) {
               final banner = DummyData.banners[index];
               return Container(
@@ -349,7 +356,7 @@ class _HomePageState extends State<HomePage> {
                           Text(
                             banner.subtitle,
                             style: const TextStyle(
-                              fontSize: 14,
+                              fontSize: 13,
                               color: Colors.white70,
                             ),
                           ),
@@ -438,7 +445,8 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
-          (context, index) => _buildRestaurantCard(restaurants[index]),
+          (context, index) =>
+              _buildRestaurantCard(restaurants[index]),
           childCount: restaurants.length,
         ),
       ),
@@ -476,7 +484,8 @@ class _HomePageState extends State<HomePage> {
                       color: FoodieColors.background,
                       child: const Center(
                         child: CircularProgressIndicator(
-                            color: FoodieColors.primary, strokeWidth: 2),
+                            color: FoodieColors.primary,
+                            strokeWidth: 2),
                       ),
                     );
                   },
@@ -558,11 +567,11 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(restaurant.name, style: FoodieTextStyles.titleSmall),
+                Text(restaurant.name,
+                    style: FoodieTextStyles.titleSmall),
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    // Rating
                     const Icon(Icons.star_rounded,
                         color: FoodieColors.rating, size: 15),
                     const SizedBox(width: 3),
@@ -579,7 +588,6 @@ class _HomePageState extends State<HomePage> {
                       style: FoodieTextStyles.labelSmall,
                     ),
                     const SizedBox(width: 12),
-                    // Distance
                     const Icon(Icons.place_outlined,
                         color: FoodieColors.textHint, size: 13),
                     const SizedBox(width: 2),
@@ -588,7 +596,6 @@ class _HomePageState extends State<HomePage> {
                       style: FoodieTextStyles.labelSmall,
                     ),
                     const SizedBox(width: 12),
-                    // Delivery time
                     const Icon(Icons.access_time_outlined,
                         color: FoodieColors.textHint, size: 13),
                     const SizedBox(width: 2),
@@ -599,7 +606,6 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
                 const SizedBox(height: 10),
-                // Delivery fee + Best seller menu preview
                 Row(
                   children: [
                     Container(
@@ -624,7 +630,8 @@ class _HomePageState extends State<HomePage> {
                           Text(
                             restaurant.deliveryFee == 0
                                 ? 'Gratis Ongkir'
-                                : DummyData.formatPrice(restaurant.deliveryFee),
+                                : DummyData.formatPrice(
+                                    restaurant.deliveryFee),
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
@@ -637,7 +644,6 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     const Spacer(),
-                    // Best seller tag if any
                     if (restaurant.menus.any((m) => m.isBestSeller))
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -649,7 +655,8 @@ class _HomePageState extends State<HomePage> {
                         child: const Row(
                           children: [
                             Icon(Icons.local_fire_department,
-                                size: 13, color: FoodieColors.secondary),
+                                size: 13,
+                                color: FoodieColors.secondary),
                             SizedBox(width: 3),
                             Text(
                               'Best Seller',
@@ -700,7 +707,19 @@ class _HomePageState extends State<HomePage> {
               final icon = items[index]['icon'] as IconData;
               final label = items[index]['label'] as String;
               return GestureDetector(
-                onTap: () => setState(() => _selectedNavIndex = index),
+                onTap: () {
+                  if (index == 1) {
+                    // ── Tab "Cari" → navigasi ke SearchPage ──
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => SearchPage(),
+                      ),
+                    );
+                  } else {
+                    setState(() => _selectedNavIndex = index);
+                  }
+                },
                 behavior: HitTestBehavior.opaque,
                 child: SizedBox(
                   width: 64,
