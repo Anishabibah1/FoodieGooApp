@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
-import 'home_page.dart'; // pastikan ini benar
+import 'theme.dart';
+import 'splash_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const FoodieGoApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class FoodieGoApp extends StatelessWidget {
+  const FoodieGoApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomePage(), // 🔥 HARUS INI
+    return MaterialApp(
+      title: 'FoodieGo',
       debugShowCheckedModeBanner: false,
+      theme: foodieTheme(),
+      home: const SplashScreen(),
     );
   }
 }
