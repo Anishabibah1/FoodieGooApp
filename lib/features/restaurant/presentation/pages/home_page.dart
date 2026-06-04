@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../shared/theme/app_theme.dart';
+import '../../../menu/presentation/pages/detail_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -215,48 +216,64 @@ class HomePage extends StatelessWidget {
         separatorBuilder: (_, __) => const SizedBox(width: 12),
         itemBuilder: (context, i) {
           final r = restaurants[i];
-          return Container(
-            width: 180,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: AppColors.divider),
+          return GestureDetector(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => DetailPage(
+                  name: r['name']!,
+                  category: r['category']!,
+                  rating: r['rating']!,
+                  time: r['time']!,
+                  emoji: r['emoji']!,
+                ),
+              ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 100,
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryLight,
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
+            child: Container(
+              width: 180,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: AppColors.divider),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryLight,
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
+                    ),
+                    child: Center(
+                      child: Text(r['emoji']!, style: const TextStyle(fontSize: 48)),
+                    ),
                   ),
-                  child: Center(child: Text(r['emoji']!, style: const TextStyle(fontSize: 48))),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(r['name']!, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13), maxLines: 1, overflow: TextOverflow.ellipsis),
-                      const SizedBox(height: 2),
-                      Text(r['category']!, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
-                      const SizedBox(height: 6),
-                      Row(
-                        children: [
-                          const Icon(Icons.star, size: 13, color: Colors.amber),
-                          const SizedBox(width: 2),
-                          Text(r['rating']!, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500)),
-                          const SizedBox(width: 8),
-                          const Icon(Icons.access_time, size: 13, color: AppColors.textSecondary),
-                          const SizedBox(width: 2),
-                          Text(r['time']!, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
-                        ],
-                      ),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(r['name']!, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13), maxLines: 1, overflow: TextOverflow.ellipsis),
+                        const SizedBox(height: 2),
+                        Text(r['category']!, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                        const SizedBox(height: 6),
+                        Row(
+                          children: [
+                            const Icon(Icons.star, size: 13, color: Colors.amber),
+                            const SizedBox(width: 2),
+                            Text(r['rating']!, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500)),
+                            const SizedBox(width: 8),
+                            const Icon(Icons.access_time, size: 13, color: AppColors.textSecondary),
+                            const SizedBox(width: 2),
+                            Text(r['time']!, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },
