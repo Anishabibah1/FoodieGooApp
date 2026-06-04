@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'bottom_navbar.dart';
 import '../../features/restaurant/presentation/pages/home_page.dart';
 import '../../features/order/presentation/pages/order_history_page.dart';
+import '../../features/cart/presentation/pages/cart_page.dart';
 
 class MainWrapper extends StatefulWidget {
   const MainWrapper({super.key});
@@ -16,7 +17,7 @@ class _MainWrapperState extends State<MainWrapper> {
   final List<Widget> _pages = [
     const HomePage(),
     const Scaffold(body: Center(child: Text('Halaman Cari'))),
-    const Scaffold(body: Center(child: Text('Halaman Keranjang'))),
+    const CartPage(),
     const OrderHistoryPage(),
     const Scaffold(body: Center(child: Text('Halaman Profil'))),
   ];

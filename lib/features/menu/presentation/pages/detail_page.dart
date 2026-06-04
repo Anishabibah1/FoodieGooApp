@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../shared/theme/app_theme.dart';
+import '../../../cart/presentation/pages/cart_page.dart';
 
 class DetailPage extends StatefulWidget {
   final String name;
@@ -263,7 +264,10 @@ class _DetailPageState extends State<DetailPage> {
       left: 20,
       right: 20,
       child: GestureDetector(
-        onTap: () {},
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const CartPage()),
+        ),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
           decoration: BoxDecoration(
