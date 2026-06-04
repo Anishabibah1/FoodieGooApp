@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../shared/theme/app_theme.dart';
 import 'register_page.dart';
+import '../../../../shared/widgets/main_wrapper.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -89,7 +90,10 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => const MainWrapper()),
+                ),
                 child: const Text('Masuk'),
               ),
               const SizedBox(height: 16),
