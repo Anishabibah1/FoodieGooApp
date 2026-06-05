@@ -98,6 +98,7 @@ class HomePage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
       child: Container(
+        width: double.infinity,
         height: 150,
         decoration: BoxDecoration(
           gradient: const LinearGradient(
