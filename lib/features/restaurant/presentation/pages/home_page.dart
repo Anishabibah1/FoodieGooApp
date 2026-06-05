@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../shared/theme/app_theme.dart';
+import '../../../../core/di/injection.dart';
+import '../bloc/restaurant_bloc.dart';
 import '../../../menu/presentation/pages/detail_page.dart';
 
 class HomePage extends StatelessWidget {
@@ -7,23 +10,24 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(),
-              _buildSearchBar(),
-              _buildBanner(),
-              _buildCategories(),
-              _buildSectionTitle('Restoran Terdekat'),
-              _buildRestaurantList(),
-              _buildSectionTitle('Promo Hari Ini'),
-              _buildRestaurantList(),
-              const SizedBox(height: 16),
-            ],
+    return BlocProvider(
+      create: (_) => sl<RestaurantBloc>()..add(LoadRestaurantsEvent()),
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHeader(),
+                _buildSearchBar(),
+                _buildBanner(),
+                _buildCategories(),
+                _buildSectionTitle('Restoran Terdekat'),
+                _buildRestaurantListFromAPI(),
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
         ),
       ),
@@ -55,15 +59,10 @@ class HomePage extends StatelessWidget {
                 onPressed: () {},
               ),
               Positioned(
-                right: 8,
-                top: 8,
+                right: 8, top: 8,
                 child: Container(
-                  width: 8,
-                  height: 8,
-                  decoration: const BoxDecoration(
-                    color: AppColors.primary,
-                    shape: BoxShape.circle,
-                  ),
+                  width: 8, height: 8,
+                  decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
                 ),
               ),
             ],
@@ -131,10 +130,9 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             ),
-            Positioned(
-              right: 16,
-              bottom: 0,
-              child: const Text('🍔', style: TextStyle(fontSize: 70)),
+            const Positioned(
+              right: 16, bottom: 0,
+              child: Text('🍔', style: TextStyle(fontSize: 70)),
             ),
           ],
         ),
@@ -168,8 +166,7 @@ class HomePage extends StatelessWidget {
               itemBuilder: (context, i) => Column(
                 children: [
                   Container(
-                    width: 56,
-                    height: 56,
+                    width: 56, height: 56,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(14),
@@ -201,84 +198,110 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildRestaurantList() {
-    final restaurants = [
-      {'name': 'Warung Nasi Padang', 'category': 'Masakan Padang', 'rating': '4.8', 'time': '20 menit', 'emoji': '🍛'},
-      {'name': 'Pizza Hut Express', 'category': 'Pizza & Pasta', 'rating': '4.6', 'time': '30 menit', 'emoji': '🍕'},
-      {'name': 'Burger Kuy!', 'category': 'Burger & Snack', 'rating': '4.7', 'time': '25 menit', 'emoji': '🍔'},
-    ];
-
-    return SizedBox(
-      height: 200,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        itemCount: restaurants.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 12),
-        itemBuilder: (context, i) {
-          final r = restaurants[i];
-          return GestureDetector(
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => DetailPage(
-                  name: r['name']!,
-                  category: r['category']!,
-                  rating: r['rating']!,
-                  time: r['time']!,
-                  emoji: r['emoji']!,
-                ),
-              ),
-            ),
-            child: Container(
-              width: 180,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: AppColors.divider),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryLight,
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
-                    ),
-                    child: Center(
-                      child: Text(r['emoji']!, style: const TextStyle(fontSize: 48)),
+  Widget _buildRestaurantListFromAPI() {
+    return BlocBuilder<RestaurantBloc, RestaurantState>(
+      builder: (context, state) {
+        if (state is RestaurantLoading) {
+          return const SizedBox(
+            height: 200,
+            child: Center(child: CircularProgressIndicator(color: AppColors.primary)),
+          );
+        } else if (state is RestaurantLoaded) {
+          return SizedBox(
+            height: 200,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              itemCount: state.restaurants.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 12),
+              itemBuilder: (context, i) {
+                final r = state.restaurants[i];
+                return GestureDetector(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => DetailPage(
+                        name: r.name,
+                        category: r.category,
+                        rating: '4.5',
+                        time: '25 menit',
+                        emoji: '🍽️',
+                        imageUrl: r.imageUrl,
+                      ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(10),
+                  child: Container(
+                    width: 180,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: AppColors.divider),
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(r['name']!, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13), maxLines: 1, overflow: TextOverflow.ellipsis),
-                        const SizedBox(height: 2),
-                        Text(r['category']!, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
-                        const SizedBox(height: 6),
-                        Row(
-                          children: [
-                            const Icon(Icons.star, size: 13, color: Colors.amber),
-                            const SizedBox(width: 2),
-                            Text(r['rating']!, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500)),
-                            const SizedBox(width: 8),
-                            const Icon(Icons.access_time, size: 13, color: AppColors.textSecondary),
-                            const SizedBox(width: 2),
-                            Text(r['time']!, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
-                          ],
+                        ClipRRect(
+                          borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
+                          child: Image.network(
+                            r.imageUrl,
+                            height: 100,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => Container(
+                              height: 100,
+                              color: AppColors.primaryLight,
+                              child: const Center(child: Text('🍽️', style: TextStyle(fontSize: 40))),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(r.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13), maxLines: 1, overflow: TextOverflow.ellipsis),
+                              const SizedBox(height: 2),
+                              Text(r.category, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                              const SizedBox(height: 6),
+                              Row(
+                                children: const [
+                                  Icon(Icons.star, size: 13, color: Colors.amber),
+                                  SizedBox(width: 2),
+                                  Text('4.5', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500)),
+                                  SizedBox(width: 8),
+                                  Icon(Icons.access_time, size: 13, color: AppColors.textSecondary),
+                                  SizedBox(width: 2),
+                                  Text('25 menit', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
+                );
+              },
+            ),
+          );
+        } else if (state is RestaurantError) {
+          return SizedBox(
+            height: 200,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(Icons.wifi_off, size: 40, color: AppColors.textHint),
+                  SizedBox(height: 8),
+                  Text('Tidak ada koneksi', style: TextStyle(color: AppColors.textSecondary)),
+                  Text('Menampilkan data cache', style: TextStyle(fontSize: 12, color: AppColors.textHint)),
                 ],
               ),
             ),
           );
-        },
-      ),
+        }
+        return const SizedBox(height: 200);
+      },
     );
   }
 }

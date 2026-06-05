@@ -8,6 +8,7 @@ class DetailPage extends StatefulWidget {
   final String rating;
   final String time;
   final String emoji;
+  final String imageUrl;
 
   const DetailPage({
     super.key,
@@ -16,6 +17,7 @@ class DetailPage extends StatefulWidget {
     required this.rating,
     required this.time,
     required this.emoji,
+    this.imageUrl = '',
   });
 
   @override
