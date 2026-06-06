@@ -31,6 +31,12 @@ class RestaurantError extends RestaurantState {
   @override
   List<Object> get props => [message];
 }
+class SearchRestaurantsEvent extends RestaurantEvent {
+  final String query;
+  SearchRestaurantsEvent(this.query);
+  @override
+  List<Object> get props => [query];
+}
 
 // BLOC
 class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantState> {
@@ -42,6 +48,15 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantState> {
       try {
         final restaurants = await getRestaurants();
         emit(RestaurantLoaded(restaurants));
+      } catch (e) {
+        emit(RestaurantError(e.toString()));
+      }
+    });
+    on<SearchRestaurantsEvent>((event, emit) async {
+      emit(RestaurantLoading());
+      try {
+        final results = await getRestaurants.repository.searchRestaurants(event.query);
+        emit(RestaurantLoaded(results));
       } catch (e) {
         emit(RestaurantError(e.toString()));
       }
