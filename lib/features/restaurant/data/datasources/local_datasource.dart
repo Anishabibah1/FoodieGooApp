@@ -14,12 +14,9 @@ class RestaurantLocalDataSource {
     final box = Hive.box(_boxName);
     final data = box.get('data', defaultValue: []);
     if (data == null || (data as List).isEmpty) return [];
-    return data.map((json) => RestaurantModel.fromJson(Map<String, dynamic>.from(json))).toList();
-  }
-
-  bool hasCachedData() {
-    final box = Hive.box(_boxName);
-    final data = box.get('data');
-    return data != null && (data as List).isNotEmpty;
+    return data
+        .map((json) => RestaurantModel.fromJson(
+            Map<String, dynamic>.from(json)))
+        .toList();
   }
 }

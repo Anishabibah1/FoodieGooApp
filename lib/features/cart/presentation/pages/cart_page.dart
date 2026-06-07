@@ -1,24 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../shared/theme/app_theme.dart';
+import '../bloc/cart_bloc.dart';
 import '../../../payment/presentation/pages/payment_page.dart';
 
-class CartPage extends StatefulWidget {
+class CartPage extends StatelessWidget {
   const CartPage({super.key});
-
-  @override
-  State<CartPage> createState() => _CartPageState();
-}
-
-class _CartPageState extends State<CartPage> {
-  final List<Map<String, dynamic>> _cartItems = [
-    {'name': 'Nasi Goreng Spesial', 'price': 25000, 'qty': 1, 'emoji': '🍳', 'resto': 'Warung Nasi Padang'},
-    {'name': 'Es Teh Manis', 'price': 8000, 'qty': 2, 'emoji': '🧋', 'resto': 'Warung Nasi Padang'},
-    {'name': 'Ayam Bakar', 'price': 30000, 'qty': 1, 'emoji': '🍗', 'resto': 'Warung Nasi Padang'},
-  ];
-
-  int get _subtotal => _cartItems.fold(0, (sum, item) => sum + (item['price'] as int) * (item['qty'] as int));
-  int get _ongkir => 5000;
-  int get _total => _subtotal + _ongkir;
 
   String _formatPrice(int price) {
     return 'Rp ${price.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.')}';
@@ -32,21 +19,27 @@ class _CartPageState extends State<CartPage> {
         title: const Text('Keranjang', style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
         elevation: 0,
+        automaticallyImplyLeading: false,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
           child: Container(height: 1, color: AppColors.divider),
         ),
       ),
-      body: _cartItems.isEmpty ? _buildEmpty() : _buildCart(),
+      body: BlocBuilder<CartBloc, CartState>(
+        builder: (context, state) {
+          if (state.items.isEmpty) return _buildEmpty(context);
+          return _buildCart(context, state);
+        },
+      ),
     );
   }
 
-  Widget _buildEmpty() {
+  Widget _buildEmpty(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('🛒', style: TextStyle(fontSize: 64)),
+          const Icon(Icons.shopping_cart_outlined, size: 80, color: AppColors.textHint),
           const SizedBox(height: 16),
           const Text('Keranjang kosong', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
@@ -62,7 +55,10 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  Widget _buildCart() {
+  Widget _buildCart(BuildContext context, CartState state) {
+    const ongkir = 5000;
+    final total = state.totalPrice + ongkir;
+
     return Column(
       children: [
         Expanded(
@@ -88,13 +84,16 @@ class _CartPageState extends State<CartPage> {
                       child: const Icon(Icons.store_outlined, color: AppColors.primary),
                     ),
                     const SizedBox(width: 10),
-                    const Text('Warung Nasi Padang', style: TextStyle(fontWeight: FontWeight.w600)),
+                    Text(
+                      state.items.first.resto,
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
                   ],
                 ),
               ),
               const SizedBox(height: 12),
               // List item
-              ...(_cartItems.map((item) => _buildCartItem(item)).toList()),
+              ...state.items.map((item) => _buildCartItem(context, item)).toList(),
               const SizedBox(height: 12),
               // Catatan
               Container(
@@ -104,8 +103,8 @@ class _CartPageState extends State<CartPage> {
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: AppColors.divider),
                 ),
-                child: Row(
-                  children: const [
+                child: const Row(
+                  children: [
                     Icon(Icons.note_outlined, color: AppColors.textSecondary),
                     SizedBox(width: 10),
                     Text('Tambah catatan untuk restoran...', style: TextStyle(color: AppColors.textHint, fontSize: 13)),
@@ -123,14 +122,14 @@ class _CartPageState extends State<CartPage> {
                 ),
                 child: Column(
                   children: [
-                    _buildPriceRow('Subtotal', _formatPrice(_subtotal)),
+                    _buildPriceRow('Subtotal', _formatPrice(state.totalPrice)),
                     const SizedBox(height: 8),
-                    _buildPriceRow('Ongkos kirim', _formatPrice(_ongkir)),
+                    _buildPriceRow('Ongkos kirim', _formatPrice(ongkir)),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 10),
                       child: Divider(height: 1),
                     ),
-                    _buildPriceRow('Total', _formatPrice(_total), isTotal: true),
+                    _buildPriceRow('Total', _formatPrice(total), isTotal: true),
                   ],
                 ),
               ),
@@ -144,16 +143,16 @@ class _CartPageState extends State<CartPage> {
           child: ElevatedButton(
             onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => PaymentPage(total: _total)),
+              MaterialPageRoute(builder: (_) => PaymentPage(total: total)),
             ),
-            child: Text('Lanjut Pembayaran • ${_formatPrice(_total)}'),
+            child: Text('Lanjut Pembayaran • ${_formatPrice(total)}'),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildCartItem(Map<String, dynamic> item) {
+  Widget _buildCartItem(BuildContext context, CartItem item) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
@@ -165,47 +164,58 @@ class _CartPageState extends State<CartPage> {
       child: Row(
         children: [
           Container(
-            width: 50,
-            height: 50,
+            width: 50, height: 50,
             decoration: BoxDecoration(
               color: AppColors.primaryLight,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Center(child: Text(item['emoji'], style: const TextStyle(fontSize: 26))),
+            child: Center(
+              child: Text(item.emoji, style: const TextStyle(fontSize: 26)),
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item['name'], style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                Text(item.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
                 const SizedBox(height: 4),
-                Text(_formatPrice(item['price']), style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w500, fontSize: 13)),
+                Text(_formatPrice(item.price), style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w500, fontSize: 13)),
               ],
             ),
           ),
           Row(
             children: [
               GestureDetector(
-                onTap: () => setState(() {
-                  if (item['qty'] == 1) _cartItems.remove(item);
-                  else item['qty']--;
-                }),
+                onTap: () => context.read<CartBloc>().add(DecrementQtyEvent(item.name)),
                 child: Container(
                   width: 28, height: 28,
-                  decoration: BoxDecoration(border: Border.all(color: AppColors.primary), borderRadius: BorderRadius.circular(6)),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.primary),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
                   child: const Icon(Icons.remove, color: AppColors.primary, size: 16),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Text('${item['qty']}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                child: Text('${item.qty}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
               ),
               GestureDetector(
-                onTap: () => setState(() => item['qty']++),
+                onTap: () => context.read<CartBloc>().add(
+                  AddToCartEvent(CartItem(
+                    name: item.name,
+                    price: item.price,
+                    emoji: item.emoji,
+                    resto: item.resto,
+                  )),
+                ),
                 child: Container(
                   width: 28, height: 28,
-                  decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(6)),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
                   child: const Icon(Icons.add, color: Colors.white, size: 16),
                 ),
               ),
@@ -220,8 +230,22 @@ class _CartPageState extends State<CartPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: TextStyle(fontSize: isTotal ? 15 : 13, fontWeight: isTotal ? FontWeight.bold : FontWeight.normal, color: isTotal ? AppColors.textPrimary : AppColors.textSecondary)),
-        Text(value, style: TextStyle(fontSize: isTotal ? 15 : 13, fontWeight: FontWeight.bold, color: isTotal ? AppColors.primary : AppColors.textPrimary)),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: isTotal ? 15 : 13,
+            fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+            color: isTotal ? AppColors.textPrimary : AppColors.textSecondary,
+          ),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: isTotal ? 15 : 13,
+            fontWeight: FontWeight.bold,
+            color: isTotal ? AppColors.primary : AppColors.textPrimary,
+          ),
+        ),
       ],
     );
   }

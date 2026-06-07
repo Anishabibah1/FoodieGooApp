@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-
-class Restaurant extends Equatable {
+class Restaurant {
   final String id;
   final String name;
   final String category;
@@ -14,7 +12,4 @@ class Restaurant extends Equatable {
     required this.imageUrl,
     required this.area,
   });
-
-  @override
-  List<Object> get props => [id, name, category, imageUrl, area];
 }
