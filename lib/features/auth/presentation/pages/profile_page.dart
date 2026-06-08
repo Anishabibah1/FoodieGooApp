@@ -39,7 +39,8 @@ class ProfilePage extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            width: 80, height: 80,
+            width: 80,
+            height: 80,
             decoration: const BoxDecoration(
               color: AppColors.primaryLight,
               shape: BoxShape.circle,
@@ -49,22 +50,36 @@ class ProfilePage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          const Text('Pengguna FoodieGoo', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const Text(
+            'Pengguna FoodieGoo',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 4),
-          const Text('pengguna@email.com', style: TextStyle(color: AppColors.textSecondary, fontSize: 14)),
+          const Text(
+            'pengguna@email.com',
+            style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+          ),
           const SizedBox(height: 4),
-          const Text('08123456789', style: TextStyle(color: AppColors.textSecondary, fontSize: 14)),
+          const Text(
+            '08123456789',
+            style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+          ),
           const SizedBox(height: 16),
           OutlinedButton(
             onPressed: () {},
             style: OutlinedButton.styleFrom(
               foregroundColor: AppColors.primary,
               side: const BorderSide(color: AppColors.primary),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 10),
               minimumSize: Size.zero,
             ),
-            child: const Text('Edit Profil', style: TextStyle(fontWeight: FontWeight.w600)),
+            child: const Text(
+              'Edit Profil',
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
           ),
         ],
       ),
@@ -111,7 +126,10 @@ class ProfilePage extends StatelessWidget {
                       ),
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size.zero,
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
                       ),
                       child: const Text('Keluar'),
                     ),
@@ -122,7 +140,10 @@ class ProfilePage extends StatelessWidget {
             ),
           ]),
           const SizedBox(height: 24),
-          const Text('FoodieGoo v1.0.0', style: TextStyle(color: AppColors.textHint, fontSize: 12)),
+          const Text(
+            'FoodieGoo v1.0.0',
+            style: TextStyle(color: AppColors.textHint, fontSize: 12),
+          ),
           const SizedBox(height: 24),
         ],
       ),
@@ -140,7 +161,12 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _menuItem(IconData icon, String title, VoidCallback onTap, {bool isRed = false}) {
+  Widget _menuItem(
+    IconData icon,
+    String title,
+    VoidCallback onTap, {
+    bool isRed = false,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(14),
@@ -148,7 +174,11 @@ class ProfilePage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(
           children: [
-            Icon(icon, size: 22, color: isRed ? AppColors.error : AppColors.textSecondary),
+            Icon(
+              icon,
+              size: 22,
+              color: isRed ? AppColors.error : AppColors.textSecondary,
+            ),
             const SizedBox(width: 14),
             Expanded(
               child: Text(
@@ -160,7 +190,11 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
             ),
-            Icon(Icons.chevron_right, size: 20, color: isRed ? AppColors.error : AppColors.textHint),
+            Icon(
+              Icons.chevron_right,
+              size: 20,
+              color: isRed ? AppColors.error : AppColors.textHint,
+            ),
           ],
         ),
       ),

@@ -11,7 +11,6 @@ class DetailPage extends StatefulWidget {
   final String category;
   final String rating;
   final String time;
-  final String emoji;
   final String imageUrl;
 
   const DetailPage({
@@ -20,7 +19,6 @@ class DetailPage extends StatefulWidget {
     required this.category,
     required this.rating,
     required this.time,
-    required this.emoji,
     this.imageUrl = '',
   });
 
@@ -85,20 +83,30 @@ class _DetailPageState extends State<DetailPage> {
         onTap: () => Navigator.pop(context),
         child: Container(
           margin: const EdgeInsets.all(8),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
         ),
       ),
       flexibleSpace: FlexibleSpaceBar(
         background: widget.imageUrl.isNotEmpty
-            ? Image.network(widget.imageUrl, fit: BoxFit.cover,
+            ? Image.network(
+                widget.imageUrl,
+                fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) => Container(
                   color: AppColors.primaryLight,
-                  child: Center(child: Text(widget.emoji, style: const TextStyle(fontSize: 80))),
-                ))
+                  child: const Center(
+                    child: Icon(Icons.fastfood, size: 80, color: AppColors.primary),
+                  ),
+                ),
+              )
             : Container(
                 color: AppColors.primaryLight,
-                child: Center(child: Text(widget.emoji, style: const TextStyle(fontSize: 80))),
+                child: const Center(
+                  child: Icon(Icons.fastfood, size: 80, color: AppColors.primary),
+                ),
               ),
       ),
     );
@@ -111,9 +119,15 @@ class _DetailPageState extends State<DetailPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(widget.name, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+          Text(
+            widget.name,
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 4),
-          Text(widget.category, style: const TextStyle(color: AppColors.textSecondary)),
+          Text(
+            widget.category,
+            style: const TextStyle(color: AppColors.textSecondary),
+          ),
           const SizedBox(height: 12),
           Row(
             children: [
@@ -134,7 +148,14 @@ class _DetailPageState extends State<DetailPage> {
       children: [
         Icon(icon, size: 16, color: color),
         const SizedBox(width: 4),
-        Text(label, style: TextStyle(fontSize: 13, color: color, fontWeight: FontWeight.w500)),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 13,
+            color: color,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
       ],
     );
   }
@@ -142,7 +163,10 @@ class _DetailPageState extends State<DetailPage> {
   Widget _buildMenuTitle() {
     return const Padding(
       padding: EdgeInsets.fromLTRB(20, 16, 20, 8),
-      child: Text('Menu', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+      child: Text(
+        'Menu',
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      ),
     );
   }
 
@@ -153,7 +177,9 @@ class _DetailPageState extends State<DetailPage> {
           return const SliverToBoxAdapter(
             child: SizedBox(
               height: 200,
-              child: Center(child: CircularProgressIndicator(color: AppColors.primary)),
+              child: Center(
+                child: CircularProgressIndicator(color: AppColors.primary),
+              ),
             ),
           );
         } else if (state is MenuLoaded) {
@@ -173,7 +199,10 @@ class _DetailPageState extends State<DetailPage> {
                   children: [
                     const Icon(Icons.error_outline, size: 40, color: AppColors.textHint),
                     const SizedBox(height: 8),
-                    Text(state.message, style: const TextStyle(color: AppColors.textSecondary)),
+                    Text(
+                      state.message,
+                      style: const TextStyle(color: AppColors.textSecondary),
+                    ),
                   ],
                 ),
               ),
@@ -188,7 +217,9 @@ class _DetailPageState extends State<DetailPage> {
   Widget _buildMenuItem(BuildContext context, MenuItem item) {
     return BlocBuilder<CartBloc, CartState>(
       builder: (context, cartState) {
-        final cartItem = cartState.items.where((c) => c.name == item.name).toList();
+        final cartItem = cartState.items
+            .where((c) => c.name == item.name)
+            .toList();
         final count = cartItem.isNotEmpty ? cartItem.first.qty : 0;
 
         return Container(
@@ -205,12 +236,16 @@ class _DetailPageState extends State<DetailPage> {
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
                   item.imageUrl,
-                  width: 70, height: 70,
+                  width: 70,
+                  height: 70,
                   fit: BoxFit.cover,
                   errorBuilder: (_, __, ___) => Container(
-                    width: 70, height: 70,
+                    width: 70,
+                    height: 70,
                     color: AppColors.primaryLight,
-                    child: const Center(child: Icon(Icons.fastfood, color: AppColors.primary)),
+                    child: const Center(
+                      child: Icon(Icons.fastfood, color: AppColors.primary),
+                    ),
                   ),
                 ),
               ),
@@ -219,11 +254,32 @@ class _DetailPageState extends State<DetailPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(item.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14), maxLines: 1, overflow: TextOverflow.ellipsis),
+                    Text(
+                      item.name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     const SizedBox(height: 2),
-                    Text(item.category, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                    Text(
+                      item.category,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
                     const SizedBox(height: 6),
-                    Text(_formatPrice(item.price), style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 15)),
+                    Text(
+                      _formatPrice(item.price),
+                      style: const TextStyle(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -234,13 +290,17 @@ class _DetailPageState extends State<DetailPage> {
                         AddToCartEvent(CartItem(
                           name: item.name,
                           price: item.price,
-                          emoji: '🍽️',
+                          imageUrl: item.imageUrl,
                           resto: widget.name,
                         )),
                       ),
                       child: Container(
-                        width: 32, height: 32,
-                        decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(8)),
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          color: AppColors.primary,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                         child: const Icon(Icons.add, color: Colors.white, size: 20),
                       ),
                     )
@@ -249,28 +309,50 @@ class _DetailPageState extends State<DetailPage> {
                         GestureDetector(
                           onTap: () => _cartBloc.add(DecrementQtyEvent(item.name)),
                           child: Container(
-                            width: 28, height: 28,
-                            decoration: BoxDecoration(border: Border.all(color: AppColors.primary), borderRadius: BorderRadius.circular(6)),
-                            child: const Icon(Icons.remove, color: AppColors.primary, size: 16),
+                            width: 28,
+                            height: 28,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: AppColors.primary),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: const Icon(
+                              Icons.remove,
+                              color: AppColors.primary,
+                              size: 16,
+                            ),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Text('$count', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                          child: Text(
+                            '$count',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
+                          ),
                         ),
                         GestureDetector(
                           onTap: () => _cartBloc.add(
                             AddToCartEvent(CartItem(
                               name: item.name,
                               price: item.price,
-                              emoji: '🍽️',
+                              imageUrl: item.imageUrl,
                               resto: widget.name,
                             )),
                           ),
                           child: Container(
-                            width: 28, height: 28,
-                            decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(6)),
-                            child: const Icon(Icons.add, color: Colors.white, size: 16),
+                            width: 28,
+                            height: 28,
+                            decoration: BoxDecoration(
+                              color: AppColors.primary,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: const Icon(
+                              Icons.add,
+                              color: Colors.white,
+                              size: 16,
+                            ),
                           ),
                         ),
                       ],
@@ -287,14 +369,18 @@ class _DetailPageState extends State<DetailPage> {
       builder: (context, cartState) {
         if (cartState.totalItems == 0) return const SizedBox.shrink();
         return Positioned(
-          bottom: 16, left: 20, right: 20,
+          bottom: 16,
+          left: 20,
+          right: 20,
           child: GestureDetector(
             onTap: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => BlocProvider.value(
-                value: _cartBloc,
-                child: const CartPage(),
-              )),
+              MaterialPageRoute(
+                builder: (_) => BlocProvider.value(
+                  value: _cartBloc,
+                  child: const CartPage(),
+                ),
+              ),
             ),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
@@ -308,13 +394,32 @@ class _DetailPageState extends State<DetailPage> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.25),
+                      color: Colors.white.withValues(alpha: 0.25),
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    child: Text('${cartState.totalItems} item', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                    child: Text(
+                      '${cartState.totalItems} item',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
-                  const Text('Lihat Keranjang', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
-                  Text(_formatPrice(cartState.totalPrice), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                  const Text(
+                    'Lihat Keranjang',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
+                  Text(
+                    _formatPrice(cartState.totalPrice),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ],
               ),
             ),

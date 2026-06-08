@@ -41,7 +41,6 @@ class _SearchPageState extends State<SearchPage> {
           automaticallyImplyLeading: false,
           title: TextField(
             controller: _searchController,
-            autofocus: true,
             decoration: InputDecoration(
               hintText: 'Cari makanan atau restoran...',
               border: InputBorder.none,
@@ -75,12 +74,19 @@ class _SearchPageState extends State<SearchPage> {
             if (_searchController.text.isEmpty) {
               return _buildEmptySearch();
             } else if (state is RestaurantLoading) {
-              return const Center(child: CircularProgressIndicator(color: AppColors.primary));
+              return const Center(
+                child: CircularProgressIndicator(color: AppColors.primary),
+              );
             } else if (state is RestaurantLoaded) {
               if (state.restaurants.isEmpty) return _buildNotFound();
               return _buildResults(state.restaurants);
             } else if (state is RestaurantError) {
-              return Center(child: Text(state.message, style: const TextStyle(color: AppColors.textSecondary)));
+              return Center(
+                child: Text(
+                  state.message,
+                  style: const TextStyle(color: AppColors.textSecondary),
+                ),
+              );
             }
             return _buildEmptySearch();
           },
@@ -90,15 +96,21 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _buildEmptySearch() {
-    return Center(
+    return const Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
+        children: [
           Icon(Icons.search, size: 64, color: AppColors.textHint),
           SizedBox(height: 16),
-          Text('Cari makanan favoritmu', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          Text(
+            'Cari makanan favoritmu',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
           SizedBox(height: 8),
-          Text('Ketik nama makanan atau restoran', style: TextStyle(color: AppColors.textSecondary)),
+          Text(
+            'Ketik nama makanan atau restoran',
+            style: TextStyle(color: AppColors.textSecondary),
+          ),
         ],
       ),
     );
@@ -111,9 +123,15 @@ class _SearchPageState extends State<SearchPage> {
         children: [
           const Icon(Icons.search_off, size: 64, color: AppColors.textHint),
           const SizedBox(height: 16),
-          Text('Tidak ditemukan: "${_searchController.text}"', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          Text(
+            'Tidak ditemukan: "${_searchController.text}"',
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 8),
-          const Text('Coba kata kunci lain', style: TextStyle(color: AppColors.textSecondary)),
+          const Text(
+            'Coba kata kunci lain',
+            style: TextStyle(color: AppColors.textSecondary),
+          ),
         ],
       ),
     );
@@ -135,7 +153,6 @@ class _SearchPageState extends State<SearchPage> {
                 category: r.category,
                 rating: '4.5',
                 time: '25 menit',
-                emoji: '🍽️',
                 imageUrl: r.imageUrl,
               ),
             ),
@@ -153,12 +170,16 @@ class _SearchPageState extends State<SearchPage> {
                   borderRadius: BorderRadius.circular(10),
                   child: Image.network(
                     r.imageUrl,
-                    width: 70, height: 70,
+                    width: 70,
+                    height: 70,
                     fit: BoxFit.cover,
                     errorBuilder: (_, __, ___) => Container(
-                      width: 70, height: 70,
+                      width: 70,
+                      height: 70,
                       color: AppColors.primaryLight,
-                      child: const Center(child: Icon(Icons.fastfood, color: AppColors.primary)),
+                      child: const Center(
+                        child: Icon(Icons.fastfood, color: AppColors.primary),
+                      ),
                     ),
                   ),
                 ),
@@ -167,19 +188,45 @@ class _SearchPageState extends State<SearchPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(r.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14), maxLines: 1, overflow: TextOverflow.ellipsis),
+                      Text(
+                        r.name,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                       const SizedBox(height: 4),
-                      Text(r.category, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                      Text(
+                        r.category,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
                       const SizedBox(height: 6),
                       Row(
                         children: const [
                           Icon(Icons.star, size: 14, color: Colors.amber),
                           SizedBox(width: 4),
-                          Text('4.5', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+                          Text(
+                            '4.5',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                           SizedBox(width: 8),
                           Icon(Icons.access_time, size: 14, color: AppColors.textSecondary),
                           SizedBox(width: 4),
-                          Text('25 menit', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                          Text(
+                            '25 menit',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
                         ],
                       ),
                     ],

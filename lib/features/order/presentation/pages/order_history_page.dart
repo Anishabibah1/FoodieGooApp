@@ -12,7 +12,7 @@ class OrderHistoryPage extends StatelessWidget {
       'total': 33000,
       'status': 'Selesai',
       'date': '04 Jun 2026',
-      'emoji': '🍛',
+      'imageUrl': 'https://www.themealdb.com/images/media/meals/sytuqu1511786590.jpg',
     },
     {
       'id': '#FG-002',
@@ -21,7 +21,7 @@ class OrderHistoryPage extends StatelessWidget {
       'total': 45000,
       'status': 'Selesai',
       'date': '03 Jun 2026',
-      'emoji': '🍔',
+      'imageUrl': 'https://www.themealdb.com/images/media/meals/urzj1d1587670726.jpg',
     },
     {
       'id': '#FG-003',
@@ -30,7 +30,7 @@ class OrderHistoryPage extends StatelessWidget {
       'total': 75000,
       'status': 'Dibatalkan',
       'date': '01 Jun 2026',
-      'emoji': '🍕',
+      'imageUrl': 'https://www.themealdb.com/images/media/meals/x0lk931587671540.jpg',
     },
   ];
 
@@ -52,31 +52,12 @@ class OrderHistoryPage extends StatelessWidget {
           child: Container(height: 1, color: AppColors.divider),
         ),
       ),
-      body: _orders.isEmpty ? _buildEmpty() : _buildList(),
-    );
-  }
-
-  Widget _buildEmpty() {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('📋', style: TextStyle(fontSize: 64)),
-          SizedBox(height: 16),
-          Text('Belum ada pesanan', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          SizedBox(height: 8),
-          Text('Yuk pesan makanan pertamamu!', style: TextStyle(color: AppColors.textSecondary)),
-        ],
+      body: ListView.separated(
+        padding: const EdgeInsets.all(16),
+        itemCount: _orders.length,
+        separatorBuilder: (_, __) => const SizedBox(height: 10),
+        itemBuilder: (context, i) => _buildOrderCard(_orders[i]),
       ),
-    );
-  }
-
-  Widget _buildList() {
-    return ListView.separated(
-      padding: const EdgeInsets.all(16),
-      itemCount: _orders.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 10),
-      itemBuilder: (context, i) => _buildOrderCard(_orders[i]),
     );
   }
 
@@ -97,20 +78,33 @@ class OrderHistoryPage extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Container(
-                    width: 42, height: 42,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryLight,
-                      borderRadius: BorderRadius.circular(10),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network(
+                      order['imageUrl'],
+                      width: 42,
+                      height: 42,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Container(
+                        width: 42,
+                        height: 42,
+                        color: AppColors.primaryLight,
+                        child: const Icon(Icons.fastfood, color: AppColors.primary, size: 20),
+                      ),
                     ),
-                    child: Center(child: Text(order['emoji'], style: const TextStyle(fontSize: 22))),
                   ),
                   const SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(order['resto'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                      Text(order['id'], style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                      Text(
+                        order['resto'],
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                      ),
+                      Text(
+                        order['id'],
+                        style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                      ),
                     ],
                   ),
                 ],
@@ -136,13 +130,28 @@ class OrderHistoryPage extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 10),
             child: Divider(height: 1),
           ),
-          Text(order['items'], style: const TextStyle(fontSize: 13, color: AppColors.textSecondary), maxLines: 1, overflow: TextOverflow.ellipsis),
+          Text(
+            order['items'],
+            style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
           const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(order['date'], style: const TextStyle(fontSize: 12, color: AppColors.textHint)),
-              Text(_formatPrice(order['total']), style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary, fontSize: 15)),
+              Text(
+                order['date'],
+                style: const TextStyle(fontSize: 12, color: AppColors.textHint),
+              ),
+              Text(
+                _formatPrice(order['total']),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primary,
+                  fontSize: 15,
+                ),
+              ),
             ],
           ),
           if (isSelesai) ...[
@@ -154,10 +163,15 @@ class OrderHistoryPage extends StatelessWidget {
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.primary,
                   side: const BorderSide(color: AppColors.primary),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                   padding: const EdgeInsets.symmetric(vertical: 10),
                 ),
-                child: const Text('Pesan Lagi', style: TextStyle(fontWeight: FontWeight.w600)),
+                child: const Text(
+                  'Pesan Lagi',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
               ),
             ),
           ],

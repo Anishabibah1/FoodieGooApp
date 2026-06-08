@@ -41,12 +41,18 @@ class CartPage extends StatelessWidget {
         children: [
           const Icon(Icons.shopping_cart_outlined, size: 80, color: AppColors.textHint),
           const SizedBox(height: 16),
-          const Text('Keranjang kosong', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const Text(
+            'Keranjang kosong',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 8),
-          const Text('Yuk tambahkan makanan favoritmu!', style: TextStyle(color: AppColors.textSecondary)),
+          const Text(
+            'Yuk tambahkan makanan favoritmu!',
+            style: TextStyle(color: AppColors.textSecondary),
+          ),
           const SizedBox(height: 24),
           ElevatedButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.popUntil(context, (route) => route.isFirst),
             style: ElevatedButton.styleFrom(minimumSize: const Size(180, 48)),
             child: const Text('Pesan Sekarang'),
           ),
@@ -65,7 +71,6 @@ class CartPage extends StatelessWidget {
           child: ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              // Info restoran
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -92,10 +97,8 @@ class CartPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              // List item
-              ...state.items.map((item) => _buildCartItem(context, item)).toList(),
+              ...state.items.map((item) => _buildCartItem(context, item)),
               const SizedBox(height: 12),
-              // Catatan
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -107,12 +110,14 @@ class CartPage extends StatelessWidget {
                   children: [
                     Icon(Icons.note_outlined, color: AppColors.textSecondary),
                     SizedBox(width: 10),
-                    Text('Tambah catatan untuk restoran...', style: TextStyle(color: AppColors.textHint, fontSize: 13)),
+                    Text(
+                      'Tambah catatan untuk restoran...',
+                      style: TextStyle(color: AppColors.textHint, fontSize: 13),
+                    ),
                   ],
                 ),
               ),
               const SizedBox(height: 12),
-              // Ringkasan harga
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -136,7 +141,6 @@ class CartPage extends StatelessWidget {
             ],
           ),
         ),
-        // Tombol checkout
         Container(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
           color: Colors.white,
@@ -163,14 +167,21 @@ class CartPage extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Container(
-            width: 50, height: 50,
-            decoration: BoxDecoration(
-              color: AppColors.primaryLight,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Center(
-              child: Text(item.emoji, style: const TextStyle(fontSize: 26)),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.network(
+              item.imageUrl,
+              width: 50,
+              height: 50,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => Container(
+                width: 50,
+                height: 50,
+                color: AppColors.primaryLight,
+                child: const Center(
+                  child: Icon(Icons.fastfood, color: AppColors.primary, size: 24),
+                ),
+              ),
             ),
           ),
           const SizedBox(width: 12),
@@ -178,9 +189,19 @@ class CartPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                Text(
+                  item.name,
+                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                ),
                 const SizedBox(height: 4),
-                Text(_formatPrice(item.price), style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w500, fontSize: 13)),
+                Text(
+                  _formatPrice(item.price),
+                  style: const TextStyle(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
+                  ),
+                ),
               ],
             ),
           ),
@@ -189,7 +210,8 @@ class CartPage extends StatelessWidget {
               GestureDetector(
                 onTap: () => context.read<CartBloc>().add(DecrementQtyEvent(item.name)),
                 child: Container(
-                  width: 28, height: 28,
+                  width: 28,
+                  height: 28,
                   decoration: BoxDecoration(
                     border: Border.all(color: AppColors.primary),
                     borderRadius: BorderRadius.circular(6),
@@ -199,19 +221,23 @@ class CartPage extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Text('${item.qty}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                child: Text(
+                  '${item.qty}',
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
               ),
               GestureDetector(
                 onTap: () => context.read<CartBloc>().add(
                   AddToCartEvent(CartItem(
                     name: item.name,
                     price: item.price,
-                    emoji: item.emoji,
+                    imageUrl: item.imageUrl,
                     resto: item.resto,
                   )),
                 ),
                 child: Container(
-                  width: 28, height: 28,
+                  width: 28,
+                  height: 28,
                   decoration: BoxDecoration(
                     color: AppColors.primary,
                     borderRadius: BorderRadius.circular(6),

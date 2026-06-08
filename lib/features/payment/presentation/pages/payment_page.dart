@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../shared/theme/app_theme.dart';
-import '../pages/payment_success_page.dart';
+import 'payment_success_page.dart';
 
 class PaymentPage extends StatefulWidget {
   final int total;
@@ -44,9 +44,14 @@ class _PaymentPageState extends State<PaymentPage> {
             child: ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                const Text('Metode Pembayaran', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                const Text(
+                  'Metode Pembayaran',
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(height: 12),
-                ...(_methods.asMap().entries.map((e) => _buildMethodTile(e.key, e.value)).toList()),
+                ..._methods.asMap().entries.map(
+                  (e) => _buildMethodTile(e.key, e.value),
+                ),
                 const SizedBox(height: 16),
                 Container(
                   padding: const EdgeInsets.all(16),
@@ -97,7 +102,10 @@ class _PaymentPageState extends State<PaymentPage> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: selected ? AppColors.primary : AppColors.divider, width: selected ? 1.5 : 1),
+          border: Border.all(
+            color: selected ? AppColors.primary : AppColors.divider,
+            width: selected ? 1.5 : 1,
+          ),
         ),
         child: Row(
           children: [
@@ -107,19 +115,34 @@ class _PaymentPageState extends State<PaymentPage> {
                 color: selected ? AppColors.primaryLight : AppColors.divider,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(method['icon'], color: selected ? AppColors.primary : AppColors.textSecondary, size: 22),
+              child: Icon(
+                method['icon'],
+                color: selected ? AppColors.primary : AppColors.textSecondary,
+                size: 22,
+              ),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(method['name'], style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
-                  Text(method['desc'], style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                  Text(
+                    method['name'],
+                    style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                  ),
+                  Text(
+                    method['desc'],
+                    style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                  ),
                 ],
               ),
             ),
-            Radio(value: index, groupValue: _selectedMethod, onChanged: (v) => setState(() => _selectedMethod = v!), activeColor: AppColors.primary),
+            Radio(
+              value: index,
+              groupValue: _selectedMethod,
+              onChanged: (v) => setState(() => _selectedMethod = v!),
+              activeColor: AppColors.primary,
+            ),
           ],
         ),
       ),
@@ -130,8 +153,22 @@ class _PaymentPageState extends State<PaymentPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: TextStyle(fontSize: isTotal ? 15 : 13, fontWeight: isTotal ? FontWeight.bold : FontWeight.normal, color: isTotal ? AppColors.textPrimary : AppColors.textSecondary)),
-        Text(value, style: TextStyle(fontSize: isTotal ? 15 : 13, fontWeight: FontWeight.bold, color: isTotal ? AppColors.primary : AppColors.textPrimary)),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: isTotal ? 15 : 13,
+            fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+            color: isTotal ? AppColors.textPrimary : AppColors.textSecondary,
+          ),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: isTotal ? 15 : 13,
+            fontWeight: FontWeight.bold,
+            color: isTotal ? AppColors.primary : AppColors.textPrimary,
+          ),
+        ),
       ],
     );
   }
