@@ -11,21 +11,21 @@ class RestaurantModel extends Restaurant {
 
   factory RestaurantModel.fromJson(Map<String, dynamic> json) {
     return RestaurantModel(
-      id: json['idMeal'] ?? '',
-      name: json['strMeal'] ?? '',
-      category: json['strCategory'] ?? '',
-      imageUrl: json['strMealThumb'] ?? '',
-      area: json['strArea'] ?? '',
+      id: json['id'] ?? json['idMeal'] ?? '',
+      name: json['name'] ?? json['strMeal'] ?? '',
+      category: json['category'] ?? json['strCategory'] ?? '',
+      imageUrl: json['image_url'] ?? json['strMealThumb'] ?? '',
+      area: json['area'] ?? json['strArea'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'idMeal': id,
-      'strMeal': name,
-      'strCategory': category,
-      'strMealThumb': imageUrl,
-      'strArea': area,
+      'id': id,
+      'name': name,
+      'category': category,
+      'image_url': imageUrl,
+      'area': area,
     };
   }
 }

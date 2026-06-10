@@ -137,11 +137,14 @@ class _PaymentPageState extends State<PaymentPage> {
                 ],
               ),
             ),
-            Radio(
-              value: index,
-              groupValue: _selectedMethod,
-              onChanged: (v) => setState(() => _selectedMethod = v!),
-              activeColor: AppColors.primary,
+            Transform.scale(
+              scale: 0.8,
+              child: Checkbox(
+                value: selected,
+                onChanged: (_) => setState(() => _selectedMethod = index),
+                activeColor: AppColors.primary,
+                shape: const CircleBorder(),
+              ),
             ),
           ],
         ),

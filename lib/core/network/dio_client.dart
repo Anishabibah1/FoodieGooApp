@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
 
 class DioClient {
@@ -17,15 +18,15 @@ class DioClient {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          print('REQUEST: ${options.method} ${options.path}');
+          debugPrint('REQUEST: ${options.method} ${options.path}');
           handler.next(options);
         },
         onResponse: (response, handler) {
-          print('RESPONSE: ${response.statusCode} ${response.requestOptions.path}');
+          debugPrint('RESPONSE: ${response.statusCode} ${response.requestOptions.path}');
           handler.next(response);
         },
         onError: (error, handler) {
-          print('ERROR: ${error.message}');
+          debugPrint('ERROR: ${error.message}');
           handler.next(error);
         },
       ),

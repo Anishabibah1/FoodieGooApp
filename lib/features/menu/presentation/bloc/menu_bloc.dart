@@ -20,13 +20,13 @@ class MenuItem {
 
   factory MenuItem.fromJson(Map<String, dynamic> json) {
     final prices = [15000, 18000, 22000, 25000, 28000, 30000, 35000, 40000];
-    final index = (json['idMeal'] ?? '0').hashCode.abs() % prices.length;
+    final index = (json['id'] ?? json['idMeal'] ?? '0').hashCode.abs() % prices.length;
     return MenuItem(
-      id: json['idMeal'] ?? '',
-      name: json['strMeal'] ?? '',
-      category: json['strCategory'] ?? '',
-      imageUrl: json['strMealThumb'] ?? '',
-      price: prices[index],
+      id: json['id'] ?? json['idMeal'] ?? '',
+      name: json['name'] ?? json['strMeal'] ?? '',
+      category: json['category'] ?? json['strCategory'] ?? '',
+      imageUrl: json['image_url'] ?? json['strMealThumb'] ?? '',
+      price: json['price'] ?? prices[index],
     );
   }
 }
@@ -76,17 +76,25 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
     on<LoadMenuEvent>((event, emit) async {
       emit(MenuLoading());
       try {
-        final keyword = event.keyword.split(' ').first;
         final response = await dio.get(
-          'https://www.themealdb.com/api/json/v1/1/search.php?s=$keyword',
+          'http://localhost:8080/api/restaurants/${event.keyword}/menu',
         );
-        final List meals = response.data['meals'] ?? [];
-        final items = meals
-            .map((json) => MenuItem.fromJson(json))
-            .toList();
+        final List meals = response.data['data'] ?? [];
+        final items = meals.map((json) => MenuItem.fromJson(json)).toList();
         emit(MenuLoaded(items));
       } catch (e) {
-        emit(MenuError('Gagal memuat menu'));
+        // Fallback ke TheMealDB kalau backend tidak jalan
+        try {
+          final keyword = event.keyword.split(' ').first;
+          final response = await dio.get(
+            'https://www.themealdb.com/api/json/v1/1/search.php?s=$keyword',
+          );
+          final List meals = response.data['meals'] ?? [];
+          final items = meals.map((json) => MenuItem.fromJson(json)).toList();
+          emit(MenuLoaded(items));
+        } catch (e2) {
+          emit(MenuError('Gagal memuat menu'));
+        }
       }
     });
   }

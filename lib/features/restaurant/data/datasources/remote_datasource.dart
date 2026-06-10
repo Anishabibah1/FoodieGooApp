@@ -8,17 +8,17 @@ class RestaurantRemoteDataSource {
   Future<List<RestaurantModel>> getRestaurants() async {
     await Future.delayed(const Duration(milliseconds: 800));
     final response = await dio.get(
-      'https://www.themealdb.com/api/json/v1/1/search.php?s=chicken',
+      'http://localhost:8080/api/restaurants',
     );
-    final List meals = response.data['meals'] ?? [];
-    return meals.map((json) => RestaurantModel.fromJson(json)).toList();
+    final List data = response.data['data'] ?? [];
+    return data.map((json) => RestaurantModel.fromJson(json)).toList();
   }
 
   Future<List<RestaurantModel>> searchRestaurants(String query) async {
     final response = await dio.get(
-      'https://www.themealdb.com/api/json/v1/1/search.php?s=$query',
+      'http://localhost:8080/api/restaurants/search?q=$query',
     );
-    final List meals = response.data['meals'] ?? [];
-    return meals.map((json) => RestaurantModel.fromJson(json)).toList();
+    final List data = response.data['data'] ?? [];
+    return data.map((json) => RestaurantModel.fromJson(json)).toList();
   }
 }
