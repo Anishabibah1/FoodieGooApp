@@ -55,7 +55,7 @@ class OrderHistoryPage extends StatelessWidget {
       body: ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: _orders.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 10),
+        separatorBuilder: (_, _) => const SizedBox(height: 10),
         itemBuilder: (context, i) => _buildOrderCard(_orders[i]),
       ),
     );
@@ -85,7 +85,7 @@ class OrderHistoryPage extends StatelessWidget {
                       width: 42,
                       height: 42,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
+                      errorBuilder: (_, _, _) => Container(
                         width: 42,
                         height: 42,
                         color: AppColors.primaryLight,

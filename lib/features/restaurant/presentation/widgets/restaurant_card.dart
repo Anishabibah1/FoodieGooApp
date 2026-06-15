@@ -33,7 +33,7 @@ class RestaurantCard extends StatelessWidget {
                 height: 100,
                 width: double.infinity,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
+                errorBuilder: (_, _, _) => Container(
                   height: 100,
                   color: AppColors.primaryLight,
                   child: const Center(

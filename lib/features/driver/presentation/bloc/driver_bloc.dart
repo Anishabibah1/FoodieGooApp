@@ -1,43 +1,36 @@
+import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import '../../domain/entities/driver.dart';
-import '../../domain/repositories/driver_repository.dart';
+import '../../data/datasources/driver_websocket_datasource.dart';
+import '../../domain/usecases/get_tracking_stream.dart';
 
-// EVENTS
 abstract class DriverEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
 
-class LoadDriverEvent extends DriverEvent {
+class StartTrackingEvent extends DriverEvent {
   final String orderId;
-  LoadDriverEvent(this.orderId);
+  StartTrackingEvent(this.orderId);
   @override
   List<Object> get props => [orderId];
 }
 
-class UpdateDeliveryStatusEvent extends DriverEvent {
-  final String status;
-  UpdateDeliveryStatusEvent(this.status);
-  @override
-  List<Object> get props => [status];
-}
+class StopTrackingEvent extends DriverEvent {}
 
-// STATES
 abstract class DriverState extends Equatable {
   @override
   List<Object> get props => [];
 }
 
 class DriverInitial extends DriverState {}
-class DriverLoading extends DriverState {}
+class DriverConnecting extends DriverState {}
 
-class DriverLoaded extends DriverState {
-  final DriverEntity driver;
-  final String status;
-  DriverLoaded({required this.driver, required this.status});
+class DriverTracking extends DriverState {
+  final TrackingUpdate update;
+  DriverTracking(this.update);
   @override
-  List<Object> get props => [driver, status];
+  List<Object> get props => [update];
 }
 
 class DriverError extends DriverState {
@@ -47,27 +40,29 @@ class DriverError extends DriverState {
   List<Object> get props => [message];
 }
 
-// BLOC
 class DriverBloc extends Bloc<DriverEvent, DriverState> {
-  final DriverRepository repository;
+  final GetTrackingStreamUseCase getTrackingStream;
+  StreamSubscription<TrackingUpdate>? _subscription;
 
-  DriverBloc(this.repository) : super(DriverInitial()) {
-    on<LoadDriverEvent>((event, emit) async {
-      emit(DriverLoading());
-      try {
-        final driver = await repository.getDriver(event.orderId);
-        final status = await repository.getDeliveryStatus(event.orderId);
-        emit(DriverLoaded(driver: driver, status: status));
-      } catch (e) {
-        emit(DriverError(e.toString()));
-      }
+  DriverBloc(this.getTrackingStream) : super(DriverInitial()) {
+    on<StartTrackingEvent>((event, emit) async {
+      emit(DriverConnecting());
+      await emit.forEach<TrackingUpdate>(
+        getTrackingStream(event.orderId),
+        onData: (update) => DriverTracking(update),
+        onError: (error, stack) => DriverError(error.toString()),
+      );
     });
 
-    on<UpdateDeliveryStatusEvent>((event, emit) {
-      if (state is DriverLoaded) {
-        final current = state as DriverLoaded;
-        emit(DriverLoaded(driver: current.driver, status: event.status));
-      }
+    on<StopTrackingEvent>((event, emit) {
+      _subscription?.cancel();
+      emit(DriverInitial());
     });
+  }
+
+  @override
+  Future<void> close() {
+    _subscription?.cancel();
+    return super.close();
   }
 }

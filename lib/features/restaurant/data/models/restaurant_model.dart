@@ -7,6 +7,8 @@ class RestaurantModel extends Restaurant {
     required super.category,
     required super.imageUrl,
     required super.area,
+    super.rating,
+    super.time,
   });
 
   factory RestaurantModel.fromJson(Map<String, dynamic> json) {
@@ -16,6 +18,8 @@ class RestaurantModel extends Restaurant {
       category: json['category'] ?? json['strCategory'] ?? '',
       imageUrl: json['image_url'] ?? json['strMealThumb'] ?? '',
       area: json['area'] ?? json['strArea'] ?? '',
+      rating: (json['rating'] ?? 4.5).toDouble(),
+      time: json['time'] ?? '25 menit',
     );
   }
 
@@ -26,6 +30,8 @@ class RestaurantModel extends Restaurant {
       'category': category,
       'image_url': imageUrl,
       'area': area,
+      'rating': rating,
+      'time': time,
     };
   }
 }

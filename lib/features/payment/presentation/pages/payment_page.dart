@@ -137,14 +137,11 @@ class _PaymentPageState extends State<PaymentPage> {
                 ],
               ),
             ),
-            Transform.scale(
-              scale: 0.8,
-              child: Checkbox(
-                value: selected,
-                onChanged: (_) => setState(() => _selectedMethod = index),
-                activeColor: AppColors.primary,
-                shape: const CircleBorder(),
-              ),
+            Checkbox(
+              value: selected,
+              onChanged: (_) => setState(() => _selectedMethod = index),
+              activeColor: AppColors.primary,
+              shape: const CircleBorder(),
             ),
           ],
         ),

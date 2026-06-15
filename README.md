@@ -1,17 +1,22 @@
-# foodiego_app
+<h1 align="center">Welcome to FoodieGoo 👋</h1>
+<p>
+  <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
+  <a href="#" target="_blank">
+    <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
+  </a>
+</p>
 
-A new Flutter project.
+> Aplikasi food delivery multiplatform Flutter dengan Clean Architecture, BLoC, REST API, dan WebSocket
 
-## Getting Started
+## Author
 
-This project is a starting point for a Flutter application.
+👤 **anis&sari**
 
-A few resources to get you started if this is your first Flutter project:
+* Github: [@Anishabibah1](https://github.com/Anishabibah1)
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## Show your support
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Give a ⭐️ if this project helped you!
+
+***
+_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_

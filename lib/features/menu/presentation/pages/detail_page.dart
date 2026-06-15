@@ -12,6 +12,7 @@ class DetailPage extends StatefulWidget {
   final String rating;
   final String time;
   final String imageUrl;
+  final String restaurantId;
 
   const DetailPage({
     super.key,
@@ -20,6 +21,7 @@ class DetailPage extends StatefulWidget {
     required this.rating,
     required this.time,
     this.imageUrl = '',
+    this.restaurantId = '',
   });
 
   @override
@@ -37,7 +39,10 @@ class _DetailPageState extends State<DetailPage> {
   @override
   void initState() {
     super.initState();
-    _menuBloc = sl<MenuBloc>()..add(LoadMenuEvent(widget.name));
+    final keyword = widget.restaurantId.isNotEmpty
+        ? widget.restaurantId
+        : widget.name;
+    _menuBloc = sl<MenuBloc>()..add(LoadMenuEvent(keyword));
     _cartBloc = sl<CartBloc>();
   }
 
@@ -95,7 +100,7 @@ class _DetailPageState extends State<DetailPage> {
             ? Image.network(
                 widget.imageUrl,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
+                errorBuilder: (_, _, _) => Container(
                   color: AppColors.primaryLight,
                   child: const Center(
                     child: Icon(Icons.fastfood, size: 80, color: AppColors.primary),
@@ -239,7 +244,7 @@ class _DetailPageState extends State<DetailPage> {
                   width: 70,
                   height: 70,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Container(
+                  errorBuilder: (_, _, _) => Container(
                     width: 70,
                     height: 70,
                     color: AppColors.primaryLight,

@@ -73,18 +73,23 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
   final Dio dio;
 
   MenuBloc(this.dio) : super(MenuInitial()) {
-    on<LoadMenuEvent>((event, emit) async {
+        on<LoadMenuEvent>((event, emit) async {
       emit(MenuLoading());
       try {
+        // Coba ambil dari backend berdasarkan restaurant ID
         final response = await dio.get(
           'http://localhost:8080/api/restaurants/${event.keyword}/menu',
         );
         final List meals = response.data['data'] ?? [];
-        final items = meals.map((json) => MenuItem.fromJson(json)).toList();
-        emit(MenuLoaded(items));
+        if (meals.isNotEmpty) {
+          final items = meals.map((json) => MenuItem.fromJson(json)).toList();
+          emit(MenuLoaded(items));
+          return;
+        }
+        throw Exception('Menu kosong');
       } catch (e) {
-        // Fallback ke TheMealDB kalau backend tidak jalan
         try {
+          // Fallback ke TheMealDB
           final keyword = event.keyword.split(' ').first;
           final response = await dio.get(
             'https://www.themealdb.com/api/json/v1/1/search.php?s=$keyword',

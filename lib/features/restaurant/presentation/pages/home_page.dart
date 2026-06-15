@@ -209,7 +209,7 @@ class _HomePageState extends State<HomePage> {
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: categories.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 12),
+              separatorBuilder: (_, _) => const SizedBox(width: 12),
               itemBuilder: (context, i) => GestureDetector(
                 onTap: () => Navigator.push(
                   context,
@@ -295,7 +295,7 @@ class _HomePageState extends State<HomePage> {
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 20),
               itemCount: state.restaurants.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 12),
+              separatorBuilder: (_, _) => const SizedBox(width: 12),
               itemBuilder: (context, i) {
                 final r = state.restaurants[i];
                 return GestureDetector(
@@ -305,9 +305,10 @@ class _HomePageState extends State<HomePage> {
                       builder: (_) => DetailPage(
                         name: r.name,
                         category: r.category,
-                        rating: '4.5',
-                        time: '25 menit',
+                        rating: r.rating.toStringAsFixed(1),
+                        time: r.time,
                         imageUrl: r.imageUrl,
+                        restaurantId: r.id,
                       ),
                     ),
                   ),
@@ -330,7 +331,7 @@ class _HomePageState extends State<HomePage> {
                             height: 100,
                             width: double.infinity,
                             fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => Container(
+                            errorBuilder: (_, _, _) => Container(
                               height: 100,
                               color: AppColors.primaryLight,
                               child: const Center(
@@ -507,7 +508,7 @@ class _SearchContentState extends State<_SearchContent> {
             return ListView.separated(
               padding: const EdgeInsets.all(16),
               itemCount: state.restaurants.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 10),
+              separatorBuilder: (_, _) => const SizedBox(height: 10),
               itemBuilder: (context, i) {
                 final r = state.restaurants[i];
                 return GestureDetector(
@@ -538,7 +539,7 @@ class _SearchContentState extends State<_SearchContent> {
                             r.imageUrl,
                             width: 70, height: 70,
                             fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => Container(
+                            errorBuilder: (_, _, _) => Container(
                               width: 70, height: 70,
                               color: AppColors.primaryLight,
                               child: const Center(child: Icon(Icons.fastfood, color: AppColors.primary)),

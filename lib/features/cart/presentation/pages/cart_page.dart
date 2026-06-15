@@ -174,7 +174,7 @@ class CartPage extends StatelessWidget {
               width: 50,
               height: 50,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
+              errorBuilder: (_, _, _) => Container(
                 width: 50,
                 height: 50,
                 color: AppColors.primaryLight,

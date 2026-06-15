@@ -79,7 +79,7 @@ class _SearchPageState extends State<SearchPage> {
               );
             } else if (state is RestaurantLoaded) {
               if (state.restaurants.isEmpty) return _buildNotFound();
-              return _buildResults(state.restaurants);
+              return _buildResults(context, state.restaurants);
             } else if (state is RestaurantError) {
               return Center(
                 child: Text(
@@ -137,11 +137,11 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  Widget _buildResults(List restaurants) {
+  Widget _buildResults(BuildContext context, List restaurants) {
     return ListView.separated(
       padding: const EdgeInsets.all(16),
       itemCount: restaurants.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 10),
+      separatorBuilder: (_, _2) => const SizedBox(height: 10),
       itemBuilder: (context, i) {
         final r = restaurants[i];
         return GestureDetector(
@@ -151,9 +151,10 @@ class _SearchPageState extends State<SearchPage> {
               builder: (_) => DetailPage(
                 name: r.name,
                 category: r.category,
-                rating: '4.5',
-                time: '25 menit',
+                rating: r.rating.toStringAsFixed(1),
+                time: r.time,
                 imageUrl: r.imageUrl,
+                restaurantId: r.id,
               ),
             ),
           ),
@@ -173,7 +174,7 @@ class _SearchPageState extends State<SearchPage> {
                     width: 70,
                     height: 70,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
+                    errorBuilder: (_, _2, _3) => Container(
                       width: 70,
                       height: 70,
                       color: AppColors.primaryLight,
@@ -207,22 +208,22 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                       const SizedBox(height: 6),
                       Row(
-                        children: const [
-                          Icon(Icons.star, size: 14, color: Colors.amber),
-                          SizedBox(width: 4),
+                        children: [
+                          const Icon(Icons.star, size: 14, color: Colors.amber),
+                          const SizedBox(width: 4),
                           Text(
-                            '4.5',
-                            style: TextStyle(
+                            r.rating.toStringAsFixed(1),
+                            style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          SizedBox(width: 8),
-                          Icon(Icons.access_time, size: 14, color: AppColors.textSecondary),
-                          SizedBox(width: 4),
+                          const SizedBox(width: 8),
+                          const Icon(Icons.access_time, size: 14, color: AppColors.textSecondary),
+                          const SizedBox(width: 4),
                           Text(
-                            '25 menit',
-                            style: TextStyle(
+                            r.time,
+                            style: const TextStyle(
                               fontSize: 12,
                               color: AppColors.textSecondary,
                             ),
