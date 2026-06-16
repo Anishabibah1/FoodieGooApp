@@ -265,7 +265,7 @@ class _TrackingPageState extends State<TrackingPage> {
                 Container(width: 2, height: 30, color: isDone ? AppColors.primary : AppColors.divider),
             ],
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 13),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(top: 6),
